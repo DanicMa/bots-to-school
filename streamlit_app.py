@@ -44,7 +44,7 @@ def stream_generator(prompt, thread_id):
     )
 
     # Start streaming the response
-    with st.spinner("Wait... Generating response..."):
+    with st.spinner("Generuji odpověď..."):
         stream = client.beta.threads.runs.create(
             thread_id=thread_id,
             assistant_id=assistant_id,
@@ -75,8 +75,8 @@ def stream_generator(prompt, thread_id):
 
 # Streamlit interface
 st.set_page_config(page_icon="🌺")
-st.title("🌺 Discuss Ancap with ChatGPT")
-st.subheader("This a proof of concept for making ChatGPT assistants easily available")
+st.title(st.secrets["TITLE"])
+st.subheader("Pro spuštění konverzace napište jakoukoliv zprávu nebo pozdrav")
 
 
 # Chat interface
@@ -87,7 +87,7 @@ for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-prompt = st.chat_input("Enter your message")
+prompt = st.chat_input("Napište svoji zprávu")
 # Streamlit interface
 if prompt:
     thread_id = ensure_single_thread_id()
@@ -103,6 +103,6 @@ if prompt:
         for chunk in stream_generator(prompt, thread_id):
             full_response += chunk
             # Update the container with the latest full response, adding fire emojis
-            response_container.markdown("🌺 " + full_response)
+            response_container.markdown(full_response)
 
     st.session_state.messages.append({"role": "assistant", "content": full_response})
